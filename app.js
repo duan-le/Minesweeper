@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 	const grid = document.querySelector(".grid");
 	let width = 10;
-	let bombsCount = 20;
+	let bombsCount = 2;
+	let flags = 0;
 	let squares = [];
 	let isGameOver = false;
 
@@ -16,10 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
 			return;
 		}
 		if (square.classList.contains("bomb")) {
-			alert("Game over");
+			gameOver();
 		} else {
 			let bombsNearbyCount = square.getAttribute("bombsNearbyCount");
-			console.log(bombsNearbyCount);
 			if (bombsNearbyCount != 0) {
 				square.innerHTML = bombsNearbyCount;
 				square.classList.add("checked");
@@ -79,6 +79,54 @@ document.addEventListener("DOMContentLoaded", () => {
 		}, 10);
 	}
 
+	function addFlag(square) {
+		if (isGameOver) {
+			return;
+		}
+		if (!square.classList.contains("checked") && flags < bombsCount) {
+			if (!square.classList.contains("flag")) {
+				square.classList.add("flag");
+				square.innerHTML = "🚩";
+				flags++;
+				//flagsLeft.innerHTML = bombsCount - flags;
+				checkWin();
+			} else {
+				square.classList.remove("flag");
+				square.innerHTML = "";
+				flags--;
+				//flagsLeft.innerHTML = bombsCount - flags;
+			}
+		}
+	}
+
+	function gameOver() {
+		alert("Game Over!");
+		isGameOver = true;
+
+		squares.forEach((square) => {
+			if (square.classList.contains("bomb")) {
+				square.innerHTML = "💣";
+			}
+		});
+	}
+
+	function checkWin() {
+		let matches = 0;
+		for (let i = 0; i < squares.length; i++) {
+			if (
+				squares[i].classList.contains("flag") &&
+				squares[i].classList.contains("bomb")
+			) {
+				matches++;
+			}
+			if (matches === bombsCount) {
+				alert("You Win!");
+				isGameOver = true;
+				break;
+			}
+		}
+	}
+
 	function createBoard() {
 		const bombsArray = Array(bombsCount).fill("bomb");
 		const safeArray = Array(width * width - bombsCount).fill("safe");
@@ -94,6 +142,10 @@ document.addEventListener("DOMContentLoaded", () => {
 			square.addEventListener("click", (e) => {
 				click(square);
 			});
+			square.oncontextmenu = (e) => {
+				e.preventDefault();
+				addFlag(square);
+			};
 		}
 
 		for (let i = 0; i < squares.length; i++) {
