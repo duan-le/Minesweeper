@@ -2,6 +2,20 @@
 	align-content: center;
 }
 
+#timer {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#reset:hover {
+	color: red;
+}
+
+.bomb:hover,
+.safe:hover {
+	background-color: #cecab7;
+}
+
 .grid {
 	height: 400px;
 	width: 400px;
