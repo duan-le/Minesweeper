@@ -33,7 +33,6 @@ div {
 }
 
 .safe {
-	font-size: 25px;
 	height: 40px;
 	width: 40px;
 	border: 5px solid;
@@ -42,6 +41,7 @@ div {
 }
 
 .checked {
+	font-size: 25px;
 	height: 40px;
 	width: 40px;
 	border: 2px solid;
@@ -51,11 +51,16 @@ div {
 }
 
 .bomb {
+	font-size: 20px;
 	height: 40px;
 	width: 40px;
 	border: 5px solid;
 	border-color: #f5f3eb #bab7a9 #bab7a9 #fff9db;
 	box-sizing: border-box;
+}
+
+.flag {
+	font-size: 20px;
 }
 
 .one {
