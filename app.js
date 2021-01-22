@@ -2,11 +2,44 @@ document.addEventListener("DOMContentLoaded", () => {
 	const flagsLeft = document.querySelector("#flags-left");
 	const result = document.querySelector("#result");
 	const grid = document.querySelector(".grid");
+	const reset = document.querySelector("#reset");
+
 	let width = 10;
 	let bombsCount = 10;
 	let flags = 0;
 	let squares = [];
 	let isGameOver = false;
+	let timeInSecs = 0;
+	let timerID;
+
+	createBoard();
+
+	// Refresh page
+	reset.addEventListener("click", (e) => {
+		window.location.reload();
+	});
+
+	/* ------------------------------------------------------------ 
+	Functions definitions
+	------------------------------------------------------------ */
+	function timerPad(val) {
+		return val > 9 ? val : "0" + val;
+	}
+
+	function timerStart() {
+		return setInterval(() => {
+			document.getElementById("seconds").innerHTML = timerPad(
+				++timeInSecs % 60
+			);
+			document.getElementById("minutes").innerHTML = timerPad(
+				parseInt(timeInSecs / 60)
+			);
+		}, 1000);
+	}
+
+	function timerStop(id) {
+		clearInterval(id);
+	}
 
 	function click(square) {
 		if (isGameOver) {
@@ -116,6 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	function gameOver() {
 		result.innerHTML = "Game Over!";
 		isGameOver = true;
+		timerStop(timerID);
 
 		squares.forEach((square) => {
 			if (square.classList.contains("bomb")) {
@@ -136,6 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (matches === bombsCount) {
 				result.innerHTML = "You Win!";
 				isGameOver = true;
+				timerStop(timerID);
 				break;
 			}
 		}
@@ -165,6 +200,9 @@ document.addEventListener("DOMContentLoaded", () => {
 			squares.push(square);
 			square.addEventListener("click", (e) => {
 				click(square);
+				if (timeInSecs == 0) {
+					timerID = timerStart();
+				}
 			});
 			square.oncontextmenu = (e) => {
 				e.preventDefault();
@@ -238,6 +276,4 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		}
 	}
-
-	createBoard();
 });
