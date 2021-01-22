@@ -159,15 +159,22 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function checkWin() {
-		let matches = 0;
+		let bombMatches = 0;
+		let safeMatches = 0;
 		for (let i = 0; i < squares.length; i++) {
 			if (
 				squares[i].classList.contains("flag") &&
 				squares[i].classList.contains("bomb")
 			) {
-				matches++;
+				bombMatches++;
 			}
-			if (matches === bombsCount) {
+			if (squares[i].classList.contains("checked")) {
+				safeMatches++;
+			}
+			if (
+				bombMatches === bombsCount ||
+				safeMatches === squares.length - bombsCount
+			) {
 				result.innerHTML = "You Win!";
 				isGameOver = true;
 				timerStop(timerID);
@@ -199,10 +206,11 @@ document.addEventListener("DOMContentLoaded", () => {
 			grid.appendChild(square);
 			squares.push(square);
 			square.addEventListener("click", (e) => {
-				click(square);
 				if (timeInSecs == 0) {
 					timerID = timerStart();
 				}
+				click(square);
+				checkWin();
 			});
 			square.oncontextmenu = (e) => {
 				e.preventDefault();
