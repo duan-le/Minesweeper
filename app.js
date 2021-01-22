@@ -146,7 +146,16 @@ document.addEventListener("DOMContentLoaded", () => {
 		const bombsArray = Array(bombsCount).fill("bomb");
 		const safeArray = Array(width * width - bombsCount).fill("safe");
 		const gameArray = bombsArray.concat(safeArray);
-		const shuffledArray = gameArray.sort(() => Math.random() - 0.5);
+
+		// Durstenfeld shuffle
+		const shuffledArray = gameArray;
+		for (let i = shuffledArray.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[shuffledArray[i], shuffledArray[j]] = [
+				shuffledArray[j],
+				shuffledArray[i],
+			];
+		}
 
 		for (let i = 0; i < width * width; i++) {
 			const square = document.createElement("div");
