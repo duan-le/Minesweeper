@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
+	const flagsLeft = document.querySelector("#flags-left");
+	const result = document.querySelector("#result");
 	const grid = document.querySelector(".grid");
 	let width = 10;
-	let bombsCount = 2;
+	let bombsCount = 10;
 	let flags = 0;
 	let squares = [];
 	let isGameOver = false;
@@ -22,6 +24,18 @@ document.addEventListener("DOMContentLoaded", () => {
 			let bombsNearbyCount = square.getAttribute("bombsNearbyCount");
 			if (bombsNearbyCount != 0) {
 				square.innerHTML = bombsNearbyCount;
+				if (bombsNearbyCount == 1) {
+					square.classList.add("one");
+				}
+				if (bombsNearbyCount == 2) {
+					square.classList.add("two");
+				}
+				if (bombsNearbyCount == 3) {
+					square.classList.add("three");
+				}
+				if (bombsNearbyCount == 4) {
+					square.classList.add("four");
+				}
 				square.classList.add("checked");
 				return;
 			}
@@ -88,19 +102,19 @@ document.addEventListener("DOMContentLoaded", () => {
 				square.classList.add("flag");
 				square.innerHTML = "🚩";
 				flags++;
-				//flagsLeft.innerHTML = bombsCount - flags;
+				flagsLeft.innerHTML = bombsCount - flags;
 				checkWin();
 			} else {
 				square.classList.remove("flag");
 				square.innerHTML = "";
 				flags--;
-				//flagsLeft.innerHTML = bombsCount - flags;
+				flagsLeft.innerHTML = bombsCount - flags;
 			}
 		}
 	}
 
 	function gameOver() {
-		alert("Game Over!");
+		result.innerHTML = "Game Over!";
 		isGameOver = true;
 
 		squares.forEach((square) => {
@@ -120,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				matches++;
 			}
 			if (matches === bombsCount) {
-				alert("You Win!");
+				result.innerHTML = "You Win!";
 				isGameOver = true;
 				break;
 			}
@@ -128,6 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function createBoard() {
+		flagsLeft.innerHTML = bombsCount - flags;
 		const bombsArray = Array(bombsCount).fill("bomb");
 		const safeArray = Array(width * width - bombsCount).fill("safe");
 		const gameArray = bombsArray.concat(safeArray);
